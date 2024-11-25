@@ -1,0 +1,263 @@
+<div class="container d-flex justify-content-center align-items-center">
+  <div class="row">
+    <div class="col-md-12 mt-4 border-bottom">
+      <span class="text-white text-center text-wrap" value="">
+        {{ description }}
+      </span>
+    </div>
+    <div
+      class="col-md-12 mt-5 d-flex justify-content-center align-content-center"
+    >
+      <form [formGroup]="globalForm" (ngSubmit)="Submit()">
+        <div class="row d-flex justify-content-between">
+          <div class="col-md-4">
+            <div class="w-100">
+              <label for="" class="fs-5">firstName</label>
+            </div>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="firstName"
+              formControlName="firstName"
+            />
+            <div class="error-container">
+              @if(globalForm?.get('firstName')?.errors?.['required'] &&
+              globalForm?.get('firstName')?.touched){
+              <span class="text-danger text-wrap">firstName required.</span>
+              } @else if(globalForm?.get('firstName')?.errors?.['minlength']){
+              <span class="text-danger text-wrap">Min 3 chars.</span>
+              }
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="w-100">
+              <label for="" class="fs-5">middleName</label>
+            </div>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="middleName"
+              formControlName="middleName"
+            />
+            <div class="error-container">
+              @if(globalForm?.get('middleName')?.errors?.['minlength']){
+              <span class="text-danger text-wrap">Min 3 chars.</span>
+              }
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="w-100">
+              <label for="" class="fs-5">lastName</label>
+            </div>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="lastName"
+              formControlName="lastName"
+            />
+            <div class="error-container">
+              @if(globalForm?.get('lastName')?.errors?.['required'] &&
+              globalForm?.get('lastName')?.touched){
+              <span class="text-danger text-wrap">lastName required.</span>
+              } @else if(globalForm?.get('lastName')?.errors?.['minlength']){
+              <span class="text-danger text-wrap">Min 3 chars.</span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-between">
+          <div class="col-md-6">
+            <div class="w-100">
+              <label for="" class="fs-5">Date Birthday</label>
+            </div>
+            <input type="date" class="w-100" formControlName="birthday" />
+            <div class="error-container">
+              @if(globalForm?.get('birthday')?.errors?.['required'] &&
+              globalForm?.get('birthday')?.touched){
+              <span class="text-danger text-wrap">birthday required.</span>
+              }
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="w-100">
+              <label for="" class="fs-5">Country</label>
+            </div>
+            <select formControlName="country">
+              @for(item of listCountry; track item.name){
+              <option [value]="item?.name">{{ item?.name }}</option>
+              }
+            </select>
+            <div class="error-container">
+              @if(globalForm?.get('country')?.errors?.['required'] &&
+              globalForm?.get('country')?.touched){
+              <span class="text-danger text-wrap"
+                >Please choose a country.</span
+              >
+              }
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-between flex-wrap">
+          <div class="col-md-6">
+            <div class="w-100">
+              <label for="" class="fs-5">City</label>
+            </div>
+            <select formControlName="city">
+              @for(item of listCity; track item.name){
+              <option [value]="item?.name">{{ item?.name }}</option>
+              }
+            </select>
+            <div class="error-container">
+              @if(globalForm?.get('city')?.errors?.['required'] &&
+              globalForm?.get('city')?.touched){
+              <span class="text-danger text-wrap">Please choose a city.</span>
+              }
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="w-100"><label for="" class="fs-5">Email</label></div>
+            <input
+              type="email"
+              name=""
+              id=""
+              placeholder="Email"
+              formControlName="email"
+            />
+            <div class="error-container">
+              @if(globalForm?.get('email')?.errors?.['required'] &&
+              globalForm?.get('email')?.touched){
+              <span class="text-danger text-wrap">email required.</span>
+              }@else if(globalForm?.get('email')?.errors?.['email'] ){
+              <span class="text-danger text-wrap">not email.</span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="w-100"><label for="" class="fs-5">Gender</label></div>
+          @for(item of listGender; track item){
+          <div class="col-md-2 form-check ms-3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="flexRadioDefault"
+              id="flexRadioDefault1"
+            />
+            <label class="form-check-label" for="flexRadioDefault1">
+              {{ item }}
+            </label>
+          </div>
+          }
+        </div>
+        <div class="row border-top mt-4 p-2" formArrayName="children">
+          <div class="col-md-12 mt-2 mb-2 d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="addChild()"
+            >
+              Add Child
+            </button>
+          </div>
+          <form action="">
+            <div
+              class="row child p-2"
+              *ngFor="let item of listChildren.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div class="col-md-3">
+                <div class="w-100">
+                  <label for="" class="fs-5">firstName</label>
+                </div>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="firstName"
+                  formControlName="firstNameChild"
+                />
+                <div class="error-container">
+                  @if(globalForm?.get('firstNameChild')?.errors?.['required'] &&
+                  globalForm?.get('firstNameChild')?.touched){
+                  <span class="text-danger text-wrap">firstName required.</span>
+                  } @else if(globalForm?.get('firstNameChild')?.errors?.['minlength']){
+                  <span class="text-danger text-wrap">Min 3 chars.</span>
+                  }
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="w-100">
+                  <label for="" class="fs-5">middleName</label>
+                </div>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="middleName"
+                  formControlName="middleNameChild"
+                />
+              </div>
+              <div class="col-md-3">
+                <div class="w-100">
+                  <label for="" class="fs-5">lastName</label>
+                </div>
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="lastName"
+                  formControlName="lastNameChild"
+                />
+              </div>
+              <div class="col-md-3">
+                <div class="w-100">
+                  <label for="" class="fs-5">Birthday</label>
+                </div>
+                <input
+                  type="date"
+                  name=""
+                  id=""
+                  class="w-100"
+                  formControlName="birthdayChild"
+                />
+              </div>
+              @if(i !== 0){
+              <div class="col-md-12 w-100 me-3 mt-2 d-flex justify-content-end">
+                <button class="btn btn-danger" (click)="removeChild(i)">
+                  Remove
+                </button>
+              </div>
+              }
+            </div>
+          </form>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-12">
+            <textarea
+              name=""
+              id=""
+              rows="10"
+              class="w-100"
+              placeholder="message"
+              formControlName="message"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-12 d-flex justify-content-end">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!globalForm.valid"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
