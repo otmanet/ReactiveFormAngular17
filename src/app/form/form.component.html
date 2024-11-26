@@ -86,6 +86,7 @@
               <label for="" class="fs-5">Country</label>
             </div>
             <select formControlName="country">
+              <option value="" disabled selected>--Select--</option>
               @for(item of listCountry; track item.name){
               <option [value]="item?.name">{{ item?.name }}</option>
               }
@@ -106,6 +107,7 @@
               <label for="" class="fs-5">City</label>
             </div>
             <select formControlName="city">
+              <option value="" disabled selected>--Select--</option>
               @for(item of listCity; track item.name){
               <option [value]="item?.name">{{ item?.name }}</option>
               }
@@ -138,13 +140,13 @@
         </div>
         <div class="row">
           <div class="w-100"><label for="" class="fs-5">Gender</label></div>
-          @for(item of listGender; track item){
+          @for(item of listGender;track item){
           <div class="col-md-2 form-check ms-3">
             <input
               class="form-check-input"
               type="radio"
-              name="flexRadioDefault"
-              id="flexRadioDefault1"
+              formControlName="gender"
+              [value]="item"
             />
             <label class="form-check-label" for="flexRadioDefault1">
               {{ item }}
@@ -168,6 +170,9 @@
               *ngFor="let item of listChildren.controls; let i = index"
               [formGroupName]="i"
             >
+              <div class="col-md-12 d-flex justify-content-start">
+                <span class="fw-bold fs-5 rounded-2 bg-gradient  p-1  shadow-lg"> Child {{ i + 1 }} </span>
+              </div>
               <div class="col-md-3">
                 <div class="w-100">
                   <label for="" class="fs-5">firstName</label>
@@ -180,10 +185,10 @@
                   formControlName="firstNameChild"
                 />
                 <div class="error-container">
-                  @if(globalForm?.get('firstNameChild')?.errors?.['required'] &&
-                  globalForm?.get('firstNameChild')?.touched){
+                  @if(item?.get('firstNameChild')?.errors?.['required'] &&
+                  item?.get('firstNameChild')?.touched){
                   <span class="text-danger text-wrap">firstName required.</span>
-                  } @else if(globalForm?.get('firstNameChild')?.errors?.['minlength']){
+                  } @else if(item?.get('firstNameChild')?.errors?.['minlength']){
                   <span class="text-danger text-wrap">Min 3 chars.</span>
                   }
                 </div>
@@ -199,6 +204,11 @@
                   placeholder="middleName"
                   formControlName="middleNameChild"
                 />
+                <div class="error-container">
+                  @if(item?.get('middleNameChild')?.errors?.['minlength']){
+                  <span class="text-danger text-wrap">Min 3 chars.</span>
+                  }
+                </div>
               </div>
               <div class="col-md-3">
                 <div class="w-100">
@@ -211,6 +221,14 @@
                   placeholder="lastName"
                   formControlName="lastNameChild"
                 />
+                <div class="error-container">
+                  @if(item?.get('lastNameChild')?.errors?.['required'] &&
+                  item?.get('lastNameChild')?.touched){
+                  <span class="text-danger text-wrap">firstName required.</span>
+                  } @else if(item?.get('lastNameChild')?.errors?.['minlength']){
+                  <span class="text-danger text-wrap">Min 3 chars.</span>
+                  }
+                </div>
               </div>
               <div class="col-md-3">
                 <div class="w-100">
@@ -223,6 +241,12 @@
                   class="w-100"
                   formControlName="birthdayChild"
                 />
+                <div class="error-container">
+                  @if(item?.get('birthdayChild')?.errors?.['required'] &&
+                  item?.get('birthdayChild')?.touched){
+                  <span class="text-danger text-wrap">birthday required.</span>
+                  }
+                </div>
               </div>
               @if(i !== 0){
               <div class="col-md-12 w-100 me-3 mt-2 d-flex justify-content-end">
@@ -244,6 +268,11 @@
               placeholder="message"
               formControlName="message"
             ></textarea>
+            <div class="error-container">
+              @if(globalForm?.get('message')?.errors?.['minlength']){
+              <span class="text-danger text-wrap">Min 10 chars.</span>
+              }
+            </div>
           </div>
         </div>
         <div class="row mt-4">
