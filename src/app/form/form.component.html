@@ -1,14 +1,66 @@
 <div class="container d-flex justify-content-center align-items-center">
-  <div class="row">
+  <div class="row w-100">
     <div class="col-md-12 mt-4 border-bottom">
       <span class="text-white text-center text-wrap" value="">
         {{ description }}
       </span>
     </div>
+    <div class="col-md-12">
+      @if(!dataSource.length){
+        <div class="no-data w-100 d-flex justify-content-center align-items-center">
+          <span class="text-white text-center text-wrap fw-bold">No Data!</span>
+        </div>
+      }@else{
+        <div class="table-responsive m-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">FirstName</th>
+                <th scope="col">MiddleName</th>
+                <th scope="col">LastName</th>
+                <th scope="col">Birthday</th>
+                <th scope="col">Country</th>
+                <th scope="col">City</th>
+                <th scope="col">Email</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Number of children</th>
+                <th scope="col">Message</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+             @for(item of dataSource;track item.firstName; let i = $index){
+              <tr>
+                <td>{{item.firstName}}</td>
+                <td>{{item.middleName}}</td>
+                <td>{{item.lastName}}</td>
+                <td>{{item.birthday}}</td>
+                <td>{{item.country}}</td>
+                <td>{{item.city}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.gender}}</td>
+                <td>{{item.children.length}}</td>
+                <td>{{item.message}}</td>
+                <td class="d-flex justify-content-start align-items-center">
+                    <button class="btn btn-secondary m-2" (click)="Update(i)">
+                      Update
+                    </button>
+                    <button class="btn btn-danger m-2" (click)="Remove(i)">
+                      Delete
+                    </button>
+                </td>
+              </tr>
+             }
+            </tbody>
+          </table>
+        </div>
+
+      }
+    </div>
     <div
       class="col-md-12 mt-5 d-flex justify-content-center align-content-center"
     >
-      <form [formGroup]="globalForm" (ngSubmit)="Submit()">
+      <form [formGroup]="globalForm" (ngSubmit)="Submit()" class="w-75">
         <div class="row d-flex justify-content-between">
           <div class="col-md-4">
             <div class="w-100">
@@ -167,11 +219,13 @@
           <form action="">
             <div
               class="row child p-2"
-              *ngFor="let item of listChildren.controls; let i = index"
-              [formGroupName]="i"
+              *ngFor="let item of listChildren.controls; let j = index"
+              [formGroupName]="j"
             >
               <div class="col-md-12 d-flex justify-content-start">
-                <span class="fw-bold fs-5 rounded-2 bg-gradient  p-1  shadow-lg"> Child {{ i + 1 }} </span>
+                <span class="fw-bold fs-5 rounded-2 bg-gradient p-1 shadow-lg">
+                  Child {{ j + 1 }}
+                </span>
               </div>
               <div class="col-md-3">
                 <div class="w-100">
@@ -248,9 +302,9 @@
                   }
                 </div>
               </div>
-              @if(i !== 0){
+              @if(j !== 0){
               <div class="col-md-12 w-100 me-3 mt-2 d-flex justify-content-end">
-                <button class="btn btn-danger" (click)="removeChild(i)">
+                <button class="btn btn-danger" (click)="removeChild(j)">
                   Remove
                 </button>
               </div>
@@ -275,15 +329,28 @@
             </div>
           </div>
         </div>
-        <div class="row mt-4">
+        <div class="row mt-4 mb-2">
           <div class="col-md-12 d-flex justify-content-end">
-            <button
+            @if(added){
+              <button
               type="submit"
-              class="btn btn-primary"
+              class="btn btn-primary "
               [disabled]="!globalForm.valid"
+
             >
               Submit
             </button>
+            }@else{
+              <button
+              type="submit"
+              class="btn btn-secondary "
+              [disabled]="!globalForm.dirty"
+              (click)="Edit()"
+            >
+              Update
+            </button>
+            }
+
           </div>
         </div>
       </form>

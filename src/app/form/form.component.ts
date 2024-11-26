@@ -6,14 +6,32 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-export interface country {
+export interface Country {
   name: string;
   code: string;
 }
 
-export interface city {
+export interface City {
   name: string;
   country: string;
+}
+export interface Child {
+  firstNameChild: string | null;
+  middleNameChild: string | null;
+  lastNameChild: string | null;
+  birthdayChild: Date | null;
+}
+export interface dataSource {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  birthday: Date;
+  country: string;
+  city: string;
+  email: string;
+  gender: string;
+  children: Child[];
+  message: string;
 }
 @Component({
   selector: 'app-form',
@@ -22,14 +40,14 @@ export interface city {
 })
 export class FormComponent implements OnInit {
   public added: boolean = true;
-  public listCountry: country[] = [
+  public listCountry: Country[] = [
     { name: 'Mongolia', code: 'MN' },
     { name: 'Montserrat', code: 'MS' },
     { name: 'Morocco', code: 'MA' },
     { name: 'Mozambique', code: 'MZ' },
   ];
   public listGender = ['Female', 'Male'];
-  public listCity: city[] = [
+  public listCity: City[] = [
     {
       name: 'Boston',
       country: 'US',
@@ -42,36 +60,18 @@ export class FormComponent implements OnInit {
     '@angular/forms' that simplify building and managing reactive forms. Here's an \
     explanation of each and an example of how to use them together";
 
+  public dataSource: dataSource[] = [];
   constructor(private fb: FormBuilder) {
-    // Define the type for the child form group
-    type ChildFormGroup = FormGroup<{
-      firstNameChild: FormControl<string | null>;
-      middleNameChild: FormControl<string | null>;
-      lastNameChild: FormControl<string | null>;
-      birthdayChild: FormControl<string | null>;
-    }>;
-
-    // Initialize the FormArray with the correct type
-    const formChildren = new FormArray<ChildFormGroup>([]);
-
-    // Create a FormGroup with typed FormControls
-    const form = new FormGroup({
-      firstNameChild: new FormControl<string | null>('', [
-        Validators.required,
-        Validators.minLength(3),
-      ]),
-      middleNameChild: new FormControl<string | null>('', [
-        Validators.minLength(3),
-      ]),
-      lastNameChild: new FormControl<string | null>('', [
-        Validators.required,
-        Validators.minLength(3),
-      ]),
-      birthdayChild: new FormControl<string | null>('', [Validators.required]),
-    });
-
     // Push the FormGroup into the FormArray
-    formChildren.push(form);
+    const array: Child[] = [
+      {
+        firstNameChild: null,
+        middleNameChild: null,
+        lastNameChild: null,
+        birthdayChild: null,
+      },
+    ];
+    const formChildren = this.handleFormChild(array);
     // Using FormBuilder to construct the FormGroup
     this.globalForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -88,6 +88,41 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  // handle formChildren
+  handleFormChild(arrayChild: Child[] | any) {
+    // Define the type for the child form group
+    type ChildFormGroup = FormGroup<{
+      firstNameChild: FormControl<string | null>;
+      middleNameChild: FormControl<string | null>;
+      lastNameChild: FormControl<string | null>;
+      birthdayChild: FormControl<Date | null>;
+    }>;
+
+    // Initialize the FormArray with the correct type
+    const formChildren = new FormArray<ChildFormGroup>([]);
+    arrayChild.forEach((elm: Child) => {
+      // Create a FormGroup with typed FormControls
+      const form = new FormGroup({
+        firstNameChild: new FormControl<string | null>(elm?.firstNameChild, [
+          Validators.required,
+          Validators.minLength(3),
+        ]),
+        middleNameChild: new FormControl<string | null>(elm?.middleNameChild, [
+          Validators.minLength(3),
+        ]),
+        lastNameChild: new FormControl<string | null>(elm?.lastNameChild, [
+          Validators.required,
+          Validators.minLength(3),
+        ]),
+        birthdayChild: new FormControl<Date | null>(elm?.birthdayChild, [
+          Validators.required,
+        ]),
+      });
+      formChildren.push(form);
+    });
+    return formChildren;
+  }
 
   // get list children
   get listChildren() {
@@ -120,6 +155,51 @@ export class FormComponent implements OnInit {
 
   // Submit button
   Submit() {
-    console.log('value come from the form', this.globalForm.value);
+    if (this.dataSource.length == 1) {
+      window.alert('You can added one element for testing.');
+      return;
+    }
+    this.dataSource.push(this.globalForm.value);
+    this.globalForm.reset();
+  }
+
+  // Update button
+  Update(index: number) {
+    let data = this.dataSource.at(index);
+    const formChildren = this.handleFormChild(data?.children);
+    this.globalForm = this.fb.group({
+      firstName: [
+        data?.firstName,
+        [Validators.required, Validators.minLength(3)],
+      ],
+      middleName: [
+        data?.middleName,
+        [Validators.required, Validators.minLength(3)],
+      ],
+      lastName: [
+        data?.lastName,
+        [Validators.required, Validators.minLength(3)],
+      ],
+      birthday: [data?.birthday, [Validators.required]],
+      country: [data?.country, [Validators.required]],
+      city: [data?.city, [Validators.required]],
+      email: [data?.email, [Validators.required, Validators.email]],
+      gender: [data?.gender, [Validators.required]],
+      children: formChildren,
+      message: [data?.message, [Validators.required, Validators.minLength(10)]],
+    });
+    this.added = false;
+  }
+
+  // Remove button
+  Remove(index: number) {
+    this.dataSource.splice(index, 1);
+  }
+
+  // Edit element in Array
+  Edit() {
+    this.dataSource.splice(0, 1, this.globalForm.value);
+    this.globalForm.reset();
+    this.added = true;
   }
 }

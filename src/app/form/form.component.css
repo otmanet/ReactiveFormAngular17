@@ -5,7 +5,7 @@ textarea {
   padding: 0.5rem; /* Optional: Add padding for better appearance */
   box-sizing: border-box; /* Include padding in the element's total width */
 }
-.form-check-input{
+.form-check-input {
   width: auto;
   padding: auto;
 }
@@ -15,6 +15,23 @@ textarea {
   font-size: 0.875rem; /* Ensure text fits well */
   line-height: 1.5em;
 }
-.child{
+.child {
   border-bottom: 2px dashed #fff;
 }
+.no-data {
+  border: 2px dashed #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  margin: 5px;
+  width: 75%;
+}
+
+
+
+table {
+  width: 100%;
+}
+
+
